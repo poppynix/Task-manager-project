@@ -1,0 +1,32 @@
+[
+  {
+    "username": "sara",
+    "password": "1234",
+    "maxTaskId": 3,
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Complete project report",
+        "done": false
+      }
+    ]
+  },
+  {
+    "username": "ahmed",
+    "password": "5678",
+    "maxTaskId": 1,
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Finish report",
+        "done": false
+      }
+    ]
+  },
+  {
+    "username": "lina",
+    "password": "1122",
+    "maxTaskId": 0,
+    "tasks": []
+  }
+]

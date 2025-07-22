@@ -2,12 +2,12 @@ const express = require('express');
 const app = express();
 const PORT = 3000;
 const taskRoutes = require('./routes/taskRoutes');
-//max_id
+const userRoutes = require('./routes/userRoutes');
 
 app.use(express.json()); 
 
 app.use('/tasks', taskRoutes);
-
+app.use('/users', userRoutes);
 
 // middleware to log requests
 app.use((req, res, next) => {

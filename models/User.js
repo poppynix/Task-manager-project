@@ -2,10 +2,11 @@ const Task = require('./Task');
 
 class User {
 
-    constructor(username, password, maxTaskId, tasks) {
+    constructor(username, password, maxTaskId, token, tasks) {
         this.username = username;
         this.password = password;
         this.maxTaskId = maxTaskId;
+        this.token = token;
         this.tasks = tasks.map(t => new Task(t.id, t.title, t.done));
     }
 
@@ -31,6 +32,10 @@ class User {
         return null;
     }
 
+    getToken() {
+        return this.token;
+    }
+
     deleteTask(id) {
         const index = this.tasks.findIndex(task => task.id === id);
         if (index !== -1) {
@@ -40,4 +45,4 @@ class User {
     }
 }
 
-    module.exports = User;
+module.exports = User;

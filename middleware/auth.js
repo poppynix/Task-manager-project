@@ -20,7 +20,7 @@ async function readUsers() {
 module.exports = async (req, res, next) => {
     const authHeader = req.headers.authorization; // reads Basic/Bearer/etc token from request header
 
-    if (!authHeader || !authHeader.startsWith('Basic ')) { // checks if the authorization header is present and starts with 'Basic'
+    if (!authHeader || !authHeader.startsWith('Basic ')) { // checks if the authorization header is present and starts with 'Bearer'
         return res.status(401).json({ error: 'Unauthorized (missing or invalid header)'});
     }
 
@@ -45,3 +45,7 @@ module.exports = async (req, res, next) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 }
+
+// use bycrypt (hash pass)
+// user repository
+// env

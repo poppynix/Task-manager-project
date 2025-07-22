@@ -1,8 +1,8 @@
 const fs = require('fs').promises;
 const path = require('path');
 const usersFilePath = path.join(__dirname, '..', 'data', 'users.json');
-const User = require('../models/User'); // Assuming you have a User model defined
-const Task = require('../models/Task'); // Assuming you have a Task model defined
+const User = require('../models/User'); 
+const Task = require('../models/Task'); 
 
 // saves users (& their tasks) to users.json
 async function saveUsers(users) {
@@ -55,3 +55,5 @@ exports.deleteTask = async (req, res) => {
 
     res.json({success: true, message: 'Task deleted successfully'});
 }
+
+//new file for save and read

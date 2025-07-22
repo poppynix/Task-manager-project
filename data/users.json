@@ -3,10 +3,24 @@
     "username": "sara",
     "password": "1234",
     "maxTaskId": 3,
+    "token": {
+      "token": "fc0c751968d86c91add0ef5b3dfb5a3f",
+      "expiry": "1753147025720"
+    },
     "tasks": [
       {
         "id": 1,
         "title": "Complete project report",
+        "done": true
+      },
+      {
+        "id": 2,
+        "title": "Prepare presentation slides",
+        "done": true
+      },
+      {
+        "id": 3,
+        "title": "do hw",
         "done": false
       }
     ]
@@ -15,6 +29,10 @@
     "username": "ahmed",
     "password": "5678",
     "maxTaskId": 1,
+    "token": {
+      "token": "randomToken",
+      "expiry": 1004567890
+    },
     "tasks": [
       {
         "id": 1,
@@ -27,6 +45,27 @@
     "username": "lina",
     "password": "1122",
     "maxTaskId": 0,
+    "token": {
+      "token": "randomToken",
+      "expiry": 1234000890
+    },
+    "tasks": []
+  },
+  {
+    "username": "salma",
+    "password": "$2b$10$htkcZvg94JmKVczxFol1rezxv0.UV3KclHvRIFwwtal7Apopxm53W",
+    "maxTaskId": 0,
+    "token": {
+      "token": "842c9552763f532a0a5348b04f21abf3",
+      "expiry": "1753149560409"
+    },
+    "tasks": []
+  },
+  {
+    "username": "noor",
+    "password": "$2b$10$uYw1miZ2dPe138pad080aOmxtaP2bTS3yfIuAmdrsfXGLzXo206HK",
+    "maxTaskId": 0,
+    "token": {},
     "tasks": []
   }
 ]

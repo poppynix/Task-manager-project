@@ -4,67 +4,67 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const User = require('../models/User');
 const Task = require('../models/Task');
+const jwt = require('jsonwebtoken');
 const usersFilePath = path.join(__dirname, '..', 'data', 'users.json');
+const userRepo = require('../repositries/userRepositry');
+const e = require('express');
 
-// reads users (& their tasks) from users.json
-async function readUsers() {
-    try {
-        const data = await fs.readFile(usersFilePath, 'utf8');
-        return JSON.parse(data || '[]').map(u => new User(u.username, u.password, u.maxTaskId, u.token, u.tasks));
-    } catch (err) {
-        console.error('Error reading users:', err);
-        return [];
-    }
+exports.getUsers = () => {
+    return userRepo.getUsers();
+};
+
+exports.getUserByUsername = (username) => {
+    return userRepo.getUsers().find(user => user.username === username);
 }
 
-// saves users (& their tasks) to users.json
-async function saveUsers(users) {
-    try {
-        await fs.writeFile(usersFilePath, JSON.stringify(users, null, 2), 'utf8');
-    } catch (error) {
-    console.error('Error saving users:', error);
-    }
-}
-
-exports.registerUser = async (username, password) => {
-    const users = await readUsers();
+exports.addUser = async (username, password) => {
+    const users = userRepo.getUsers();
     const existingUser = users.find(u => u.username === username);
-    console.log('Existing user:', existingUser);
-
     if (existingUser) {
         throw new Error('Username already exists');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User(username, hashedPassword, 0, {}, []);
+    const newUser = new User(username, hashedPassword, 0, []);
     users.push(newUser);
-
-    await saveUsers(users);
+    userRepo.setUsers(users);
     return newUser;
 }
 
-exports.loginUser = async (username, password) => {
-    const users = await readUsers();
+exports.changePassword = async (username, newPassword) => {
+    const users = userRepo.getUsers();
     const user = users.find(u => u.username === username);
-    // console.log(password);
-    // console.log(user.password);
-
     if (!user) {
-        throw new Error('Invalid username');
+        throw new Error('User not found');
     }
-
-    const isValidPassword = await bcrypt.compare(password, user.password);
-
-    if (!isValidPassword) {
-        throw new Error('Invalid password');
-    }
-
-    const token = crypto.randomBytes(16).toString('hex');
-    const expiry = Date.now() + 3600000; 
-
-    user.token = { token, expiry: expiry.toString() };
-    // console.log(user.token);
-    await saveUsers(users);
-
+    user.password = await bcrypt.hash(newPassword, 10);
+    userRepo.setUsers(users);
     return user;
 }
+
+exports.changeUsername = async (username, newUsername) => {
+    const users = userRepo.getUsers();
+    const user = users.find(u => u.username === username);
+    if (!user) {
+        throw new Error('User not found');
+    }
+    else if (users.some(u => u.username === newUsername)) {
+        throw new Error('Username already exists');
+    }
+
+    user.username = newUsername;
+    userRepo.setUsers(users);
+    return user;
+}
+
+exports.deleteUser = async (username) => {
+    const users = userRepo.getUsers();
+    const userIndex = users.findIndex(u => u.username === username);
+    if (userIndex === -1) {
+        throw new Error('User not found');
+    }
+
+    users.splice(userIndex, 1);
+    userRepo.setUsers(users);
+}
+

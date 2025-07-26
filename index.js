@@ -1,13 +1,19 @@
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const taskRoutes = require('./routes/taskRoutes');
 const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/authRoutes');
+const dotenv = require('dotenv');
+const userRepo = require('./repositries/userRepositry');
+userRepo.loadUsers();
+dotenv.config();
 
 app.use(express.json()); 
 
 app.use('/tasks', taskRoutes);
-app.use('/users', userRoutes);
+app.use('/admin', userRoutes);
+app.use('/auth', authRoutes);
 
 // middleware to log requests
 app.use((req, res, next) => {

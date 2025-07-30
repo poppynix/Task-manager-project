@@ -32,5 +32,17 @@
         "done": false
       }
     ]
+  },
+  {
+    "username": "admin",
+    "password": "$2b$10$XHg8G78bC9QTSpOVssRE7ebifkh8FvgQ4mXEiuGhDBBO.ny0cfmeS",
+    "maxTaskId": 0,
+    "tasks": []
+  },
+  {
+    "username": "sara",
+    "password": "$2b$10$OYZiOba3Zsn4ieZXU7yBXeqPKV4rdNbF5k08/Ywpopfxh8zMXSLKq",
+    "maxTaskId": 0,
+    "tasks": []
   }
 ]

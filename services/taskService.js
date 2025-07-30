@@ -1,11 +1,4 @@
-const fs = require('fs').promises;
-const path = require('path');
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
-const User = require('../models/User');
 const Task = require('../models/Task');
-const jwt = require('jsonwebtoken');
-const usersFilePath = path.join(__dirname, '..', 'data', 'users.json');
 const userRepo = require('../repositries/userRepositry');
 
 exports.getTasks = async (user) => {
@@ -15,7 +8,6 @@ exports.getTasks = async (user) => {
 
 exports.getTaskById = async (user, id) => {
     const tasks = await exports.getTasks(user);
-    // console.log(tasks);
     if (!tasks) {
         throw new Error('No tasks found');
     }

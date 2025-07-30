@@ -1,8 +1,4 @@
-const fs = require('fs').promises;
 const path = require('path');
-const usersFilePath = path.join(__dirname, '..', 'data', 'users.json');
-const User = require('../models/User');
-const Task = require('../models/Task');
 const jwt = require('jsonwebtoken');
 
 // module.exports runs before any route handler

@@ -1,0 +1,48 @@
+[
+  {
+    "username": "noor",
+    "password": "$2b$10$4c4ySp03XyM3Rm.bk0XrYuJqkM8.K3JazSYmESpQpWpW5xAwDF606",
+    "maxTaskId": 3,
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Complete project report",
+        "done": true
+      },
+      {
+        "id": 2,
+        "title": "Study for exams",
+        "done": true
+      },
+      {
+        "id": 3,
+        "title": "do hw",
+        "done": false
+      }
+    ]
+  },
+  {
+    "username": "ahmed",
+    "password": "5678",
+    "maxTaskId": 1,
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Finish report",
+        "done": false
+      }
+    ]
+  },
+  {
+    "username": "admin",
+    "password": "$2b$10$XHg8G78bC9QTSpOVssRE7ebifkh8FvgQ4mXEiuGhDBBO.ny0cfmeS",
+    "maxTaskId": 0,
+    "tasks": []
+  },
+  {
+    "username": "sara",
+    "password": "$2b$10$OYZiOba3Zsn4ieZXU7yBXeqPKV4rdNbF5k08/Ywpopfxh8zMXSLKq",
+    "maxTaskId": 0,
+    "tasks": []
+  }
+]

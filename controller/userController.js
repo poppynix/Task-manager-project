@@ -1,18 +1,17 @@
-const path = require('path'); 
 const userService = require('../services/userService');
 
-exports.getAllUsers = async (req, res) => {
+exports.readAllUsers = async (req, res) => {
     try {
-        const users = userService.getUsers();
+        const users = await userService.getUsers();
         res.json({ success: true, users });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
 
-exports.getUserByUsername = async (req, res) => {
+exports.readUserById = async (req, res) => {
     try {
-        const user = await userService.getUserByUsername(req.params.username);
+        const user = await userService.getUserById(req.params.id);
         res.json({ success: true, user });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -42,7 +41,7 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
     try {
         await userService.deleteUser(req.params.username);
-        res.json({ success: true, message: 'User deleted successfully', Users: this.getAllUsers() });
+        res.json({ success: true, message: 'User deleted successfully', Users: await userService.getUsers() });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

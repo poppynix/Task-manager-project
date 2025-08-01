@@ -1,49 +1,54 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
-const userRepo = require('../repositries/userRepositry');
 
-exports.getUsers = () => {
-    return userRepo.getUsers();
+exports.getUsers = async () => {
+    const users = await User.find({}, 'username role');
+    return users;
 };
 
-exports.getUserByUsername = (username) => {
-    const user = userRepo.getUsers().find(user => user.username === username);
-    if (!user){
+exports.getUserById = async (id) => {
+    if (!id) {
+        throw new Error('ID is required');
+    }
+    const user = await User.findOne({ _id: id }, 'username role');
+    if (!user) {
         throw new Error('User does not exist');
     }
-    else {
-        return user;
-    }
+    return user;    
 }
 
 exports.addUser = async (username, password) => {
-    const users = userRepo.getUsers();
-    if (!username || !password){
-        throw new Error ('Username and password are required');
+    if (!username || !password) {
+        throw new Error('Username and password are required');
     }
-    const user = this.getUserByUsername(username);
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User(username, hashedPassword, 0, []);
-    users.push(newUser);
-    userRepo.setUsers(users);
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+        throw new Error('User already exists');
+    }
+    const newUser = new User({
+        username,
+        password: await bcrypt.hash(password, 10),
+    });
+    await newUser.save();
     return newUser;
 }
 
-exports.updateUser = async (username, type, newData) => {
-    if (!username || !type || !newData){
+exports.updateUser = async (username, dataType, newData) => {
+    if (!username || !dataType || !newData){
         throw new Error ('Data is missing');
     }
-    const users = userRepo.getUsers();
-    const user = this.getUserByUsername(username);
-    if (type === 'username'){
+    const user = await User.findOne({ username });
+    if (!user) {
+        throw new Error('User not found');
+    }
+    if (dataType === 'username'){
         user.username = newData;
-        userRepo.setUsers(users);
+        await user.save();
         return user;
     }
-    else if (type === 'password'){
-        user.password = await bcrypt.hash(password, 10);
-        userRepo.setUsers(users);
+    else if (dataType === 'password'){
+        user.password = await bcrypt.hash(newData, 10);
+        await user.save();
         return user;
     }
     else {
@@ -52,12 +57,12 @@ exports.updateUser = async (username, type, newData) => {
 }
 
 exports.deleteUser = async (username) => {
-    const users = userRepo.getUsers();
-    const userIndex = users.findIndex(u => u.username === username);
-    if (userIndex === -1) {
+    if (!username) {
+        throw new Error('Username is required');
+    }
+    const user = await User.findOne({ username });
+    if (!user) {
         throw new Error('User not found');
     }
-    users.splice(userIndex, 1);
-    userRepo.setUsers(users);
+    await user.deleteOne({ _id: user.id });
 }
-

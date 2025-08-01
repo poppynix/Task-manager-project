@@ -1,7 +1,6 @@
-const path = require('path');
 const taskService = require('../services/taskService');
 
-exports.getAllTasks = async (req, res) => {
+exports.readAllTasks = async (req, res) => {
     try {
         const tasks = await taskService.getTasks(req.user);
         res.json({ success: true, tasks });
@@ -10,7 +9,7 @@ exports.getAllTasks = async (req, res) => {
     }
 }
 
-exports.getTaskById = async (req, res) => {
+exports.readTaskById = async (req, res) => {
     try {
         const task = await taskService.getTaskById(req.user, req.params.id);
         res.json({ success: true, task });
@@ -42,9 +41,8 @@ exports.updateTask = async (req, res) => {
 exports.deleteTask = async (req, res) => {
     try {
         await taskService.deleteTask(req.user, req.params.id);
-        res.json({ success: true, message: 'Task deleted successfully', Tasks: this.getAllTasks()});
+        res.json({ success: true, message: 'Task deleted successfully', Tasks: await taskService.getTasks(req.user) });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
-

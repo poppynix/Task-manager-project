@@ -1,57 +1,65 @@
 const Task = require('../models/Task');
-const userRepo = require('../repositries/userRepositry');
 
 exports.getTasks = async (user) => {
-    const users = userRepo.getUsers();
-    return users.find(u => u.username === user.username)?.tasks || [];
+    if (!user || !user.id) {
+        throw new Error('Data is missing');
+    }
+    const tasks = await Task.find({ userId: user.id });
+    if (!tasks || tasks.length === 0) {
+        throw new Error('No tasks found');
+    }
+    return tasks;
 };
 
 exports.getTaskById = async (user, id) => {
-    const tasks = await exports.getTasks(user);
-    if (!tasks) {
-        throw new Error('No tasks found');
-    }
-    const task = tasks.find(task => task.id === parseInt(id));
+    const task = await Task.findById(id);
     if (!task) {
         throw new Error('Task not found');
+    }
+    else if (task.userId.toString() !== user.id) {
+        throw new Error('Unauthorized to access this task');
     }
     return task;
 };
 
 exports.addTask = async (user, title) => {
-    const users = userRepo.getUsers();
-    const foundUser = users.find(u => u.username === user.username);
-    if (foundUser) {
-        const task = new Task(foundUser.maxTaskId + 1, title, false);
-        foundUser.maxTaskId = foundUser.maxTaskId + 1;
-        foundUser.tasks.push(task);
-        userRepo.setUsers(users);
-        return task;
+    if (!user || !user.id || !title) {
+        throw new Error('Data is missing');
     }
+    const newTask = new Task({
+        title,
+        userId: user.id,
+    });
+    await newTask.save();
+    return newTask;
 };
 
 exports.updateTask = async (user, id) => {
-    const users = userRepo.getUsers();
-    const foundUser = users.find(u => u.username === user.username);
-    if (foundUser) {
-        const taskIndex = foundUser.tasks.findIndex(t => t.id === parseInt(id));
-        if (taskIndex !== -1) {
-            foundUser.tasks[taskIndex].done = !foundUser.tasks[taskIndex].done;
-            userRepo.setUsers(users);
-            return foundUser.tasks[taskIndex];
-        }
+    if (!user || !user.id || !id) {
+        throw new Error('Data is missing');
     }
+    const task = await Task.findById(id);
+    if (!task) {
+        throw new Error('Task not found');
+    }
+    else if (task.userId.toString() !== user.id) {
+        throw new Error('Unauthorized to update this task');
+    }
+    task.done = !task.done;
+    await task.save();
+    return task;
 };
 
 exports.deleteTask = async (user, id) => {
-    const users = userRepo.getUsers();
-    const foundUser = users.find(u => u.username === user.username);
-    if (foundUser) {
-        const taskIndex = foundUser.tasks.findIndex(t => t.id === parseInt(id));
-        if (taskIndex !== -1) {
-            foundUser.tasks.splice(taskIndex, 1);
-            userRepo.setUsers(users);
-            return foundUser.tasks[taskIndex];
-        }
+    if (!user || !user.id || !id) {
+        throw new Error('Data is missing');
     }
+    const task = await Task.findById(id);
+    if (!task) {
+        throw new Error('Task not found');
+    }
+    else if (task.userId.toString() !== user.id) {
+        throw new Error('Unauthorized to delete this task');
+    }
+    await task.deleteOne({ _id: id });
 };

@@ -1,10 +1,20 @@
-class Task {
+const mongoose = require('mongoose');
 
-    constructor(id, title, done) {
-        this.id = id;
-        this.title = title;
-        this.done = done;
+const taskSchema = new mongoose.Schema({
+    title: { 
+        type: String,
+        required: true,
+        trim: true
+    },
+    done: { 
+        type: Boolean,
+        default: false 
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
     }
-}
+}, {timestamps: true});
 
-module.exports = Task;
+module.exports = mongoose.model('Task', taskSchema);

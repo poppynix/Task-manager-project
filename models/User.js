@@ -1,13 +1,33 @@
-const Task = require('./Task');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
-class User {
-
-    constructor(username, password, maxTaskId, tasks) {
-        this.username = username;
-        this.password = password;
-        this.maxTaskId = maxTaskId;
-        this.tasks = tasks || [];
+const userSchema = new mongoose.Schema({
+    username: { 
+        type: String, 
+        required: true, 
+        unique: true,
+        trim: true 
+    },
+    password: { 
+        type: String, 
+        required: true,
+    },
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user'
     }
-}
+});
 
-module.exports = User;
+userSchema.pre('save', async function (next) {
+    if (this.isModified('password')) {
+        this.password = await bcrypt.hash(this.password, 10);
+    }
+    next();
+});
+
+userSchema.methods.comparePassword = async function (pass) {
+    return await bcrypt.compare(pass, this.password);
+};
+
+module.exports = mongoose.model('User', userSchema);
